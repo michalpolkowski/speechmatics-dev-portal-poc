@@ -42,3 +42,5 @@ export const loginRequest = {
 export const graphConfig = {
   graphMeEndpoint: "https://graph.microsoft-ppe.com/v1.0/me"
 };
+
+console.log("msalConfig", JSON.stringify(msalConfig))
