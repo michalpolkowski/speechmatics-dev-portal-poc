@@ -2,25 +2,23 @@ import { useRouter } from 'next/router'
 import Link from 'next/link';
 import menuData from '../static_data/menu-data'
 import { useContext, useEffect } from 'react';
+import { LoginContext } from '../utils/login-context';
 import { SpeechmaticsLogo, ExternalLink, AccountIcon, LogoutIcon } from '../components/Icons';
-import { Tooltip, Link as ChakraLink, Button } from '@chakra-ui/react';
-import { useMsal } from "@azure/msal-react";
-
+import { Tooltip, Link as ChakraLink } from '@chakra-ui/react';
 
 export default function Dashboard({ children }) {
 
   const router = useRouter();
+  const loginContext = useContext(LoginContext);
 
-  const { instance, accounts, inProgress } = useMsal();
-  
-  const account = instance.getActiveAccount();
-
-  if (accounts.length == 0) return <div>not logged in, go to <Link href='/login/'>login</Link></div>
+  useEffect(() => {
+    if (loginContext.data?.name === undefined) router.push('/login')
+  }, [])
 
   return <div className="dashboard_container">
     <div className="dashboard_sidenav">
       <SpeechmaticsLogo w={250} h={130} />
-      <div className='hi_name'>Hi, {account.name || account.username}!</div>
+      <div className='hi_name'>Hi, {loginContext.data?.name}!</div>
       <div className='nav_menu'>
         {menuData.map((item) => <MenuElem item={item} key={item.path}
           selected={router.asPath == item.path} />)}
@@ -42,11 +40,13 @@ export default function Dashboard({ children }) {
           </Tooltip>
         </ChakraLink>
       </Link>
-        <Tooltip label='Log out' placement="left">
-          <span style={{ cursor: 'pointer' }} onClick={() => instance.logoutRedirect()}>
-            <LogoutIcon w={30} h={30} />
-          </span>
-        </Tooltip>
+      <Link href='/login/'>
+        <ChakraLink>
+          <Tooltip label='Log out' placement="left">
+            <div style={{ cursor: 'pointer' }}><LogoutIcon w={30} h={30} /></div>
+          </Tooltip>
+        </ChakraLink>
+      </Link>
     </div>
   </div >
 }

@@ -48,7 +48,8 @@ input:focus {
 .next_button {
     border: 0;
     width: 10em;
-    padding: 1em;
+    height: 2em;
+    padding: 0 1em;
     border-radius: 15px;
     background: var(--main-navy);
     font-family: GibsonRegular;
